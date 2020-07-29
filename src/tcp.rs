@@ -124,7 +124,7 @@ struct RecvSequenceSpace {
 
 impl Connection {
     pub fn accept<'a>(
-        nic: &mut tun_tap::Iface,
+        nic: &mut rotunda::Iface,
         iph: etherparse::Ipv4HeaderSlice<'a>,
         tcph: etherparse::TcpHeaderSlice<'a>,
         data: &'a [u8],
@@ -192,7 +192,7 @@ impl Connection {
         Ok(Some(c))
     }
 
-    fn write(&mut self, nic: &mut tun_tap::Iface, seq: u32, mut limit: usize) -> io::Result<usize> {
+    fn write(&mut self, nic: &mut rotunda::Iface, seq: u32, mut limit: usize) -> io::Result<usize> {
         let mut buf = [0u8; 1500];
         self.tcp.sequence_number = seq;
         self.tcp.acknowledgment_number = self.recv.nxt;
@@ -291,7 +291,7 @@ impl Connection {
         Ok(payload_bytes)
     }
 
-    fn send_rst(&mut self, nic: &mut tun_tap::Iface) -> io::Result<()> {
+    fn send_rst(&mut self, nic: &mut rotunda::Iface) -> io::Result<()> {
         self.tcp.rst = true;
         // TODO: fix sequence numbers here
         // If the incoming segment has an ACK field, the reset takes its
@@ -314,7 +314,7 @@ impl Connection {
         Ok(())
     }
 
-    pub(crate) fn on_tick(&mut self, nic: &mut tun_tap::Iface) -> io::Result<()> {
+    pub(crate) fn on_tick(&mut self, nic: &mut rotunda::Iface) -> io::Result<()> {
         if let State::FinWait2 | State::TimeWait = self.state {
             // we have shutdown our write side and the other side acked, no need to (re)transmit anything
             return Ok(());
@@ -373,7 +373,7 @@ impl Connection {
 
     pub(crate) fn on_packet<'a>(
         &mut self,
-        nic: &mut tun_tap::Iface,
+        nic: &mut rotunda::Iface,
         iph: etherparse::Ipv4HeaderSlice<'a>,
         tcph: etherparse::TcpHeaderSlice<'a>,
         data: &'a [u8],

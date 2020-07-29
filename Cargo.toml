@@ -5,7 +5,8 @@ authors = ["Jon Gjengset <jon@thesquareplanet.com>"]
 edition = "2018"
 
 [dependencies]
-tun-tap = "0.1.2"
+# tun-tap = "0.1.2"
+rotunda = { path = "../rotunda" }
 etherparse = "0.8"
 bitflags = "1.0"
 nix = "0.13"

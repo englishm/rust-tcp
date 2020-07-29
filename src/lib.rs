@@ -52,7 +52,7 @@ struct ConnectionManager {
     pending: HashMap<u16, VecDeque<Quad>>,
 }
 
-fn packet_loop(mut nic: tun_tap::Iface, ih: InterfaceHandle) -> io::Result<()> {
+fn packet_loop(mut nic: rotunda::Iface, ih: InterfaceHandle) -> io::Result<()> {
     let mut buf = [0u8; 1504];
 
     loop {
@@ -163,7 +163,7 @@ fn packet_loop(mut nic: tun_tap::Iface, ih: InterfaceHandle) -> io::Result<()> {
 
 impl Interface {
     pub fn new() -> io::Result<Self> {
-        let nic = tun_tap::Iface::without_packet_info("tun0", tun_tap::Mode::Tun)?;
+        let nic = rotunda::Iface::without_packet_info("tun0", rotunda::Mode::Tun)?;
 
         let ih: InterfaceHandle = Arc::default();
 
